@@ -88,8 +88,6 @@ async function assumeRole(params) {
   
   // These are customizations needed for the GH OIDC Provider
   if(isDefined(webIdentityToken)) {
-    delete assumeRoleRequest.Tags;
-
     assumeRoleRequest.WebIdentityToken = webIdentityToken;
     assumeFunction = sts.assumeRoleWithWebIdentity.bind(sts);
   } else if(isDefined(webIdentityTokenFile)) {
